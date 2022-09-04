@@ -59,7 +59,7 @@ void busca(int codcliente, int *fim, int *z)
 {
     
     FILE *fp;
-    if((fp = fopen("tabhash.dat", "wb")) == NULL)
+    if((fp = fopen("tabhash.dat", "rb")) == NULL)
     {
         printf("error\n");
         exit(1);
@@ -113,7 +113,7 @@ void insercao(TC o)
     
     int fim = 0;
     int z = 0;
-    int i = 0;
+    int i = 1;
     int c = -1;
     
     busca(o.codcliente, &fim, &z);
@@ -121,12 +121,12 @@ void insercao(TC o)
     if(z != 1)
     {
         FILE *fp;
-        if((fp = fopen("tabhash.dat", "wb")) == NULL)
+        if((fp = fopen("tabhash.dat", "rb+")) == NULL)
         {
             printf("error\n");
             exit(1);
         }
-    }
+    
     
     if(fim != 1)
     {
@@ -135,9 +135,9 @@ void insercao(TC o)
     else
     {
         c = calculo(o.codcliente);
-        while(i < DIMENSAO)
+        while(i <= DIMENSAO)
         {
-            fseek(fp, SIZE_HASH * (*fim), SEEK_SET);
+            fseek(fp, (SIZE_HASH * c) + BANDEIRA, SEEK_SET);
                 
             int bandeira;
             fread(&bandeira, sizeof(int), 1, fp);
@@ -214,8 +214,10 @@ void main()
     insercao(u4);
     
     TC u5;
-    u5.codcliente = 10;
+    u5.codcliente = 14;
     strncpy(u5.name, "balrog",100);
     insercao(u5);
 }
+
+
 
